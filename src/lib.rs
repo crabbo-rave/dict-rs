@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 use std::{
     collections::hash_map::DefaultHasher,
     hash::{Hash, Hasher},
@@ -14,18 +15,40 @@ impl<V> Dict<V> {
         }
     }
 
+=======
+use std::{hash::{Hasher, Hash}, collections::hash_map::DefaultHasher};
+
+pub struct Dict<V> {
+    table: Vec<Option<V>>
+} 
+
+impl<V> Dict<V> {
+    pub fn new(n: usize) -> Self {
+        Self { table: std::iter::repeat_with(|| None).take(n).collect() }
+    }
+    
+>>>>>>> Stashed changes
     pub fn set<K: Hash>(&mut self, key: K, value: V) {
         let hashed = self.hash_key(&key);
         match self.table.get(hashed) {
             Some(_) => self.table[hashed] = Some(value),
+<<<<<<< Updated upstream
             None => self.table[hashed] = Some(value),
+=======
+            None => self.table[hashed] = Some(value)
+>>>>>>> Stashed changes
         }
     }
 
     pub fn get<K: Hash>(&self, key: &K) -> Option<&V> {
         match self.table.get(self.hash_key(key)) {
+<<<<<<< Updated upstream
             Some(Some(value)) => Some(&value),
             Some(None) | None => None,
+=======
+            Some(Some(value)) => Some(value), 
+            Some(None) | None => None
+>>>>>>> Stashed changes
         }
     }
 
@@ -40,7 +63,14 @@ impl<V: std::fmt::Display> Dict<V> {
     pub fn print<K: Hash>(&self, item: &K) {
         match self.get(item) {
             None => println!("key not found"),
+<<<<<<< Updated upstream
             Some(value) => println!("{}", *value),
         }
     }
 }
+=======
+            Some(value) => println!("{}", *value)
+        }
+    }
+}
+>>>>>>> Stashed changes
