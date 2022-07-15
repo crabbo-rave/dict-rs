@@ -1,4 +1,4 @@
-use dict_rs::dict::*;
+use dict_rs::*;
 
 fn main() {
     let mut dict: Dict<i32> = Dict::new(1000);
