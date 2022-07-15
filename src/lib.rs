@@ -1,36 +1,39 @@
 pub mod dict {
-    pub struct Dict<K: Eq, V> {
-        table: Vec<(K, V)>
+    use std::{hash::{Hasher, Hash}, collections::hash_map::DefaultHasher};
+
+    pub struct Dict<V> {
+        table: Vec<Option<V>>
     } 
 
-    impl<K: Eq, V> Dict<K, V> {
-        pub fn new() -> Self {
-            Self { table: vec![] }
+    impl<V> Dict<V> {
+        pub fn new(n: usize) -> Self {
+            Self { table: std::iter::repeat_with(|| None).take(n).collect() }
         }
         
-        pub fn set(&mut self, key: K, value: V) {
-            match self.find_key(&key) {
-                Some(idx) => self.table[idx] = (key, value),
-                None => self.table.push((key, value))
+        pub fn set<K: Hash>(&mut self, key: K, value: V) {
+            let hashed = self.hash_key(&key);
+            match self.table.get(hashed) {
+                Some(_) => self.table[hashed] = Some(value),
+                None => self.table[hashed] = Some(value)
             }
         }
 
-        pub fn get(&self, item: &K) -> Option<&V> {
-            match self.find_key(item) {
-                Some(idx) => Some(&self.table[idx].1),
-                None => None
+        pub fn get<K: Hash>(&self, key: &K) -> Option<&V> {
+            match self.table.get(self.hash_key(key)) {
+                Some(Some(value)) => Some(&value), 
+                Some(None) | None => None
             }
         }
 
-        fn find_key(&self, item: &K) -> Option<usize> {
-            self.table
-                .iter()
-                .position(|(key, _)| *key == *item)
+        fn hash_key<K: Hash>(&self, key: &K) -> usize {
+            let mut s = DefaultHasher::new();
+            key.hash(&mut s);
+            (s.finish() % 1000).try_into().unwrap()
         }
     }
 
-    impl<K: Eq, V : std::fmt::Display> Dict<K, V> {
-        pub fn print(&self, item: &K) {
+    impl<V: std::fmt::Display> Dict<V> {
+        pub fn print<K: Hash>(&self, item: &K) {
             match self.get(item) {
                 None => println!("key not found"),
                 Some(value) => println!("{}", *value)

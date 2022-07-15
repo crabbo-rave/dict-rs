@@ -1,13 +1,13 @@
 use dict_rs::dict::*;
 
 fn main() {
-    let mut dict: Dict<&str, i32> = Dict::new();
+    let mut dict: Dict<i32> = Dict::new(1000);
     dict.set("rust", 15);
-    dict.set("ferris", 32);
+    dict.set(1234, 32);
     dict.set("hi", 1);
-    dict.set("rust is fun", 78);
+    dict.set([1, 2, 3], 78);
     dict.print(&"hi");
-    dict.print(&"ferris"); 
+    dict.print(&1234); 
     dict.print(&"bad key");
-    dict.print(&"rust is fun")
+    dict.print(&[1, 2, 3])
 }
